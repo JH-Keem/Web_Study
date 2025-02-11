@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Base64 Image Upload</title>
+</head>
+<body>
+    <h2>Base64 이미지 변환 테스트</h2>
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="fileInput">파일 업로드</label>
+        <input id="fileInput" type="file" name="file" required>
+        <button type="submit">업로드</button>
+    </form>
+    <div th:if="${message}">
+        <p th:text="${message}"></p>
+    </div>
+
+    <div th:if="${imageData}">
+        <h3>Base64 변환된 이미지(가로사이즈 300px 고정):</h3>
+        <img id="uploadedImage"
+            th:src="'data:image/png;base64,' + ${imageData}"
+            style="max-width: 300px; height: auto; display: block"
+        />
+        <textarea rows="5" cols="50" th:text="${imageData}"></textarea>
+
+        <button onclick="saveToLocalStorage()">localStorage 저장</button>
+    </div>
+
+    <div th:if="${imageData}">
+        <button onclick="clearLocalStorage()">초기화</button>
+    </div>
+
+    <script>
+        function saveToLocalStorage(){
+            let base64Data = document.querySelector("textarea").value;
+            localStorage.setItem("savedImage", base64Data);
+            alert("이미지가 localStorage에 저장되었습니다 !");
+        }
+
+        function clearLocalStorage(){
+            localStorage.removeItem("savedImage");
+            let storedImage = document.getElementById("storedImage");
+            if(storedImage){
+                storedImage.remove();
+            }
+            alert("localStorage가 초기화되었습니다 !");
+            window.location.href = "/";
+        }
+    </script>
+</body>
+</html>
